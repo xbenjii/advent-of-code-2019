@@ -1,13 +1,8 @@
-import { promisify } from 'util';
 import request from 'request-promise-native';
-import { stat, writeFile, readFile } from 'fs';
+import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 
-const { statAsync, writeFileAsync, readFileAsync } = {
-    statAsync: promisify(stat),
-    writeFileAsync: promisify(writeFile),
-    readFileAsync: promisify(readFile)
-};
+const {stat, writeFile, readFile} = fsPromises;
 
 const ADVENT_URL = 'https://adventofcode.com/2019/day/{day}/input';
 const SESSION_CODE = process.env.AOC_SESSION_CODE || false;
@@ -27,20 +22,20 @@ async function saveInput(day: number, path: string) : Promise<any> {
             Cookie: `session=${SESSION_CODE}`
         }
     });
-    await writeFileAsync(path, input.toString());
+    await writeFile(path, input.toString());
 }
 
 async function main() {
     for(const day of days) {
         const inputFile = join(__dirname, '../inputs/', `${day}.txt`);
         try {
-            await statAsync(inputFile);
+            await stat(inputFile);
         } catch(e) {
             await saveInput(day, inputFile);
         }
         try {
             const runner = require(`./days/${day}`);
-            const input = await readFileAsync(inputFile, 'utf8');
+            const input = await readFile(inputFile, 'utf8');
             console.log(`Day ${day}`);
             runner.run(input);
         } catch(e) {
