@@ -41,6 +41,7 @@ async function main() {
         try {
             const runner = require(`./days/${day}`);
             const input = await readFileAsync(inputFile, 'utf8');
+            console.log(`Day ${day}`);
             runner.run(input);
         } catch(e) {
             if(e.code === 'MODULE_NOT_FOUND') {
