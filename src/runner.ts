@@ -37,7 +37,7 @@ async function main() {
             const runner = require(`./days/${day}`);
             const input = await readFile(inputFile, 'utf8');
             console.log(`Day ${day}`);
-            runner.run(input);
+            await runner.run(input);
         } catch(e) {
             if(e.code === 'MODULE_NOT_FOUND') {
                 console.error(`Module not found for day ${day}`);
